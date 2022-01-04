@@ -1,8 +1,9 @@
 fun main() {
     fun part1(input: List<String>): Int {
         val inputInt = input.map(String::toInt)
-        return (1 until input.size).map {
-            inputInt[it - 1] < inputInt[it]
+
+        return (1 until input.size).map { i ->
+            inputInt[i - 1] < inputInt[i]
         }.count { it }
     }
 
@@ -13,8 +14,8 @@ fun main() {
             inputInt[i - 1] + inputInt[i] + inputInt[i + 1]
         }
 
-        return (1 until inputThreeSlidingWindows.size).map {
-            inputThreeSlidingWindows[it - 1] < inputThreeSlidingWindows[it]
+        return (1 until inputThreeSlidingWindows.size).map { i ->
+            inputThreeSlidingWindows[i - 1] < inputThreeSlidingWindows[i]
         }.count { it }
     }
 
