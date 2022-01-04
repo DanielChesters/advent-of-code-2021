@@ -1,6 +1,6 @@
 fun main() {
     fun part1(input: List<String>): Int {
-        val instructions = input.map{
+        val instructions = input.map {
             val split = it.split(" ")
             Pair(split[0], split[1].toInt())
         }
@@ -17,11 +17,11 @@ fun main() {
             .filter { (direction, _) -> direction == "down" }
             .sumOf { (_, count) -> count }
 
-       return forward * (down - up)
+        return forward * (down - up)
     }
 
     fun part2(input: List<String>): Int {
-        val instructions = input.map{
+        val instructions = input.map {
             val split = it.split(" ")
             Pair(split[0], split[1].toInt())
         }
@@ -30,7 +30,7 @@ fun main() {
         var depth = 0
 
         instructions.forEach { (direction, count) ->
-            when(direction) {
+            when (direction) {
                 "forward" -> {
                     horizontalPosition += count
                     depth += aim * count
