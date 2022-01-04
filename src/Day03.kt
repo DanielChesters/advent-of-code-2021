@@ -11,8 +11,32 @@ fun main() {
         return gammaRate * epsilonRate
     }
 
+    fun computeOxygenGeneratorRating(input: List<String>, position: Int): Int = if (input.size == 1) {
+        input[0].toInt(2)
+    } else {
+        val bits = input.map { it[position] }
+        val bitToKeep = if (bits.count { it == '1' } >= bits.count { it == '0' }) '1' else '0'
+        val newInput = input.filter {
+            it[position] == bitToKeep
+        }
+        computeOxygenGeneratorRating(newInput, position + 1)
+    }
+
+    fun computeCo2GeneratorRating(input: List<String>, position: Int): Int = if (input.size == 1) {
+        input[0].toInt(2)
+    } else {
+        val bits = input.map { it[position] }
+        val bitToKeep = if (bits.count { it == '1' } < bits.count { it == '0' }) '1' else '0'
+        val newInput = input.filter {
+            it[position] == bitToKeep
+        }
+        computeCo2GeneratorRating(newInput, position + 1)
+    }
+
     fun part2(input: List<String>): Int {
-        return input.size
+        val oxygenGeneratorRating = computeOxygenGeneratorRating(input, 0)
+        val co2GeneratorRating = computeCo2GeneratorRating(input, 0)
+        return oxygenGeneratorRating * co2GeneratorRating
     }
 
     val testInput = readInput("Day03_test")
@@ -20,6 +44,6 @@ fun main() {
     check(part1(testInput) == 198)
     println(part1(input))
 
-    check(part2(testInput) == 0)
+    check(part2(testInput) == 230)
     println(part2(input))
 }
