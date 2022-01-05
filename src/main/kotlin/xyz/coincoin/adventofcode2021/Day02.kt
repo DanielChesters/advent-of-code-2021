@@ -1,5 +1,7 @@
-fun main() {
-    fun part1(input: List<String>): Int {
+package xyz.coincoin.adventofcode2021
+
+class Day02 : Day {
+    override fun part1(input: List<String>): Int {
         val instructions = input.map {
             val split = it.split(" ")
             Pair(split[0], split[1].toInt())
@@ -20,7 +22,7 @@ fun main() {
         return forward * (down - up)
     }
 
-    fun part2(input: List<String>): Int {
+    override fun part2(input: List<String>): Int {
         val instructions = input.map {
             val split = it.split(" ")
             Pair(split[0], split[1].toInt())
@@ -46,13 +48,11 @@ fun main() {
 
         return horizontalPosition * depth
     }
+}
 
-
-    val testInput = readInput("Day02_test")
+fun main() {
+    val day02 = Day02()
     val input = readInput("Day02")
-    check(part1(testInput) == 150)
-    println(part1(input))
-
-    check(part2(testInput) == 900)
-    println(part2(input))
+    println(day02.part1(input))
+    println(day02.part2(input))
 }

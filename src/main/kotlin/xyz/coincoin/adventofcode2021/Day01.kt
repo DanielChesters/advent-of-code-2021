@@ -1,5 +1,7 @@
-fun main() {
-    fun part1(input: List<String>): Int {
+package xyz.coincoin.adventofcode2021
+
+class Day01 : Day {
+    override fun part1(input: List<String>): Int {
         val inputInt = input.map(String::toInt)
 
         return (1 until input.size).map { i ->
@@ -7,7 +9,7 @@ fun main() {
         }.count { it }
     }
 
-    fun part2(input: List<String>): Int {
+    override fun part2(input: List<String>): Int {
         val inputInt = input.map(String::toInt)
 
         val inputThreeSlidingWindows = (1 until input.size - 1).map { i ->
@@ -18,12 +20,11 @@ fun main() {
             inputThreeSlidingWindows[i - 1] < inputThreeSlidingWindows[i]
         }.count { it }
     }
+}
 
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 7)
-    check(part2(testInput) == 5)
-
+fun main() {
+    val day01 = Day01()
     val input = readInput("Day01")
-    println(part1(input))
-    println(part2(input))
+    println(day01.part1(input))
+    println(day01.part2(input))
 }

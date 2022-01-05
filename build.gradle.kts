@@ -6,11 +6,13 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    testImplementation("io.kotest:kotest-runner-junit5:5.0.3")
+}
+
 tasks {
-    sourceSets {
-        main {
-            java.srcDirs("src")
-        }
+    test {
+        useJUnitPlatform()
     }
 
     wrapper {

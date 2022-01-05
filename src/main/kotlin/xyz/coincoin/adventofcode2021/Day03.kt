@@ -1,5 +1,7 @@
-fun main() {
-    fun part1(input: List<String>): Int {
+package xyz.coincoin.adventofcode2021
+
+class Day03 : Day {
+    override fun part1(input: List<String>): Int {
         val binaryLength = input[0].length
         val gammaRate = (0 until binaryLength).map { i ->
             val bits = input.map { it[i] }
@@ -11,7 +13,7 @@ fun main() {
         return gammaRate * epsilonRate
     }
 
-    fun computeOxygenGeneratorRating(input: List<String>, position: Int): Int = if (input.size == 1) {
+    private fun computeOxygenGeneratorRating(input: List<String>, position: Int): Int = if (input.size == 1) {
         input[0].toInt(2)
     } else {
         val bits = input.map { it[position] }
@@ -22,7 +24,7 @@ fun main() {
         computeOxygenGeneratorRating(newInput, position + 1)
     }
 
-    fun computeCo2GeneratorRating(input: List<String>, position: Int): Int = if (input.size == 1) {
+    private fun computeCo2GeneratorRating(input: List<String>, position: Int): Int = if (input.size == 1) {
         input[0].toInt(2)
     } else {
         val bits = input.map { it[position] }
@@ -33,17 +35,16 @@ fun main() {
         computeCo2GeneratorRating(newInput, position + 1)
     }
 
-    fun part2(input: List<String>): Int {
+    override fun part2(input: List<String>): Int {
         val oxygenGeneratorRating = computeOxygenGeneratorRating(input, 0)
         val co2GeneratorRating = computeCo2GeneratorRating(input, 0)
         return oxygenGeneratorRating * co2GeneratorRating
     }
+}
 
-    val testInput = readInput("Day03_test")
+fun main() {
+    val day03 = Day03()
     val input = readInput("Day03")
-    check(part1(testInput) == 198)
-    println(part1(input))
-
-    check(part2(testInput) == 230)
-    println(part2(input))
+    println(day03.part1(input))
+    println(day03.part2(input))
 }
