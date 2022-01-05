@@ -22,6 +22,16 @@ class Day04 : Day {
         return sumNotMarkInt * currentDraw
     }
 
+    override fun part2(input: List<String>): Int {
+        val drawNumbers = getDrawNumbers(input)
+
+        val boards = getBoards(input)
+
+        
+
+        return 0
+    }
+
     private fun getBoards(input: List<String>) = input.subList(2, input.size)
         .filter { it != "" }
         .windowed(size = 5, step = 5, transform = { list ->
@@ -74,10 +84,6 @@ class Day04 : Day {
             board.map { it[col] }
                 .all { (_, mark) -> mark }
         }
-
-    override fun part2(input: List<String>): Int {
-        return 0
-    }
 }
 
 fun main() {
