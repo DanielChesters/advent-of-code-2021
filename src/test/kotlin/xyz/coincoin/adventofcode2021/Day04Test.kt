@@ -13,7 +13,7 @@ class Day04Test: ShouldSpec({
         result shouldBe 4512
     }
 
-    should("give xxx for part 2") {
+    should("give 1924 for part 2") {
         val result = day04.part2(input)
 
         result shouldBe 1924

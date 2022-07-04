@@ -2,6 +2,8 @@ package xyz.coincoin.adventofcode2021
 
 typealias Boards = List<Board>
 
+typealias BoardsWithPosition = List<Pair<Board, Int>>
+
 typealias BingoNumber = Pair<Int, Boolean>
 
 typealias Row = List<BingoNumber>
@@ -14,9 +16,9 @@ class Day04 : Day {
 
         val boards = getBoards(input)
 
-        val (markedBoard, currentDraw) = markBoards(boards, drawNumbers)
+        val (markedBoards, currentDraw) = markBoards(boards, drawNumbers)
 
-        val winningBoard = getWinner(markedBoard)
+        val winningBoard = getWinner(markedBoards)
         val sumNotMarkInt = sumNotMarkInt(winningBoard)
 
         return sumNotMarkInt * currentDraw
@@ -27,9 +29,44 @@ class Day04 : Day {
 
         val boards = getBoards(input)
 
-        
+        val boardsWithPosition = boards.map {
+            Pair(it, 0)
+        }
 
-        return 0
+        val (markedBoards, currentDraw, lastWinningPosition) = markBoardsUntilLastWin(boardsWithPosition, drawNumbers)
+
+        val lastWinningBoard = getLastWinningBoard(markedBoards, lastWinningPosition)
+
+        val sumNotMarkInt = sumNotMarkInt(lastWinningBoard)
+
+        return sumNotMarkInt * currentDraw
+    }
+
+    private fun getLastWinningBoard(markedBoards: BoardsWithPosition, lastWinningPosition: Int): Board {
+        return markedBoards.first {
+            it.second == lastWinningPosition
+        }.first
+    }
+
+    private fun markBoardsUntilLastWin(boards: BoardsWithPosition, drawNumbers: IntArray, currentWinningPosition: Int = 1): Triple<BoardsWithPosition, Int, Int> {
+        val currentDraw = drawNumbers[0]
+        val markedBoards = boards.map { boardWithWinningPosition ->
+            val updatedBoard = markRow(boardWithWinningPosition.first, currentDraw)
+            if (checkIfBoardIsWinner(updatedBoard) && boardWithWinningPosition.second == 0) {
+                Triple(updatedBoard, currentWinningPosition, true)
+            } else {
+                Triple(updatedBoard, boardWithWinningPosition.second, false)
+            }
+        }
+
+        return if (allBoardWinner(markedBoards.map { it.first }))
+            Triple(markedBoards.map { Pair(it.first, it.second) }, currentDraw, currentWinningPosition)
+        else
+            markBoardsUntilLastWin(
+                boards = markedBoards.map { Pair(it.first, it.second) },
+                drawNumbers = drawNumbers.sliceArray(1 until drawNumbers.size),
+                currentWinningPosition = if (markedBoards.any { it.third }) currentWinningPosition + 1 else currentWinningPosition
+            )
     }
 
     private fun getBoards(input: List<String>) = input.subList(2, input.size)
@@ -40,7 +77,6 @@ class Day04 : Day {
                     .map { i ->
                         BingoNumber(i.toInt(), false)
                     }
-
             }
         })
 
@@ -50,14 +86,7 @@ class Day04 : Day {
     private fun markBoards(boards: Boards, drawNumbers: IntArray): Pair<Boards, Int> {
         val currentDraw = drawNumbers[0]
         val markedBoards = boards.map { board ->
-            board.map { row ->
-                row.map { (number, mark) ->
-                    if (currentDraw == number)
-                        BingoNumber(number, true)
-                    else
-                        BingoNumber(number, mark)
-                }
-            }
+            markRow(board, currentDraw)
         }
 
         return if (hasAWinner(markedBoards))
@@ -66,7 +95,21 @@ class Day04 : Day {
             markBoards(markedBoards, drawNumbers.sliceArray(1 until drawNumbers.size))
     }
 
+    private fun markRow(
+        board: Board,
+        currentDraw: Int
+    ) = board.map { row ->
+        row.map { (number, mark) ->
+            if (currentDraw == number)
+                BingoNumber(number, true)
+            else
+                BingoNumber(number, mark)
+        }
+    }
+
     private fun hasAWinner(boards: Boards): Boolean = boards.any(::checkIfBoardIsWinner)
+
+    private fun allBoardWinner(boards: Boards): Boolean = boards.all(::checkIfBoardIsWinner)
 
     private fun getWinner(boards: Boards): Board =
         boards.first(::checkIfBoardIsWinner)
