@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.7.0"
 }
 
 repositories {
@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation("io.kotest:kotest-runner-junit5:5.0.3")
+    testImplementation("io.kotest:kotest-runner-junit5:5.3.1")
 }
 
 tasks {
@@ -16,6 +16,6 @@ tasks {
     }
 
     wrapper {
-        gradleVersion = "7.3.3"
+        gradleVersion = "7.4.2"
     }
 }
