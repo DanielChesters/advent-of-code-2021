@@ -2,9 +2,10 @@ package xyz.coincoin.adventofcode2021
 
 typealias Boards = List<Board>
 
-typealias BoardsWithPosition = List<Pair<Board, Int>>
+typealias BoardsWithPosition = List<BoardWithPosition>
 
-typealias BingoNumber = Pair<Int, Boolean>
+data class BoardWithPosition(val board: Board, val position: Int)
+data class BingoNumber(val number: Int, val marked: Boolean)
 
 typealias Row = List<BingoNumber>
 
@@ -29,8 +30,8 @@ class Day04 : Day {
 
         val boards = getBoards(input)
 
-        val boardsWithPosition = boards.map {
-            Pair(it, 0)
+        val boardsWithPosition = boards.map { board: Board ->
+            BoardWithPosition(board, 0)
         }
 
         val (markedBoards, currentDraw, lastWinningPosition) = markBoardsUntilLastWin(boardsWithPosition, drawNumbers)
@@ -44,26 +45,28 @@ class Day04 : Day {
 
     private fun getLastWinningBoard(markedBoards: BoardsWithPosition, lastWinningPosition: Int): Board {
         return markedBoards.first {
-            it.second == lastWinningPosition
-        }.first
+            it.position == lastWinningPosition
+        }.board
     }
 
     private fun markBoardsUntilLastWin(boards: BoardsWithPosition, drawNumbers: IntArray, currentWinningPosition: Int = 1): Triple<BoardsWithPosition, Int, Int> {
         val currentDraw = drawNumbers[0]
         val markedBoards = boards.map { boardWithWinningPosition ->
-            val updatedBoard = markRow(boardWithWinningPosition.first, currentDraw)
-            if (checkIfBoardIsWinner(updatedBoard) && boardWithWinningPosition.second == 0) {
+            val updatedBoard = markRow(boardWithWinningPosition.board, currentDraw)
+            if (checkIfBoardIsWinner(updatedBoard) && boardWithWinningPosition.position == 0) {
                 Triple(updatedBoard, currentWinningPosition, true)
             } else {
-                Triple(updatedBoard, boardWithWinningPosition.second, false)
+                Triple(updatedBoard, boardWithWinningPosition.position, false)
             }
         }
 
         return if (allBoardWinner(markedBoards.map { it.first }))
-            Triple(markedBoards.map { Pair(it.first, it.second) }, currentDraw, currentWinningPosition)
+            Triple(markedBoards.map { BoardWithPosition(it.first, it.second) },
+                currentDraw,
+                currentWinningPosition)
         else
             markBoardsUntilLastWin(
-                boards = markedBoards.map { Pair(it.first, it.second) },
+                boards = markedBoards.map { BoardWithPosition   (it.first, it.second) },
                 drawNumbers = drawNumbers.sliceArray(1 until drawNumbers.size),
                 currentWinningPosition = if (markedBoards.any { it.third }) currentWinningPosition + 1 else currentWinningPosition
             )
@@ -98,7 +101,7 @@ class Day04 : Day {
     private fun markRow(
         board: Board,
         currentDraw: Int
-    ) = board.map { row ->
+    ): Board = board.map { row ->
         row.map { (number, mark) ->
             if (currentDraw == number)
                 BingoNumber(number, true)
