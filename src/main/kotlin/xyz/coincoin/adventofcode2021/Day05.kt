@@ -21,7 +21,12 @@ class Day05 : Day {
     }
 
     override fun part2(input: List<String>): Int {
-        TODO("Not yet implemented")
+        val lines = convertInput(input)
+        val table = createTable(lines)
+
+        val updatedTable = updateTableWithDiagonalLines(table, lines)
+
+        return getScore(updatedTable)
     }
 
     private fun getScore(table: Table): Int = table.sumOf { row ->
@@ -33,6 +38,14 @@ class Day05 : Day {
     private fun updateTable(table: Table, lines: Lines): Table {
         val filterLines = lines.filter { line ->
             line.from.x == line.to.x || line.from.y == line.to.y
+        }
+        return markTable(table, filterLines)
+    }
+    private fun updateTableWithDiagonalLines(table: Table, lines: Lines): Table {
+        val filterLines = lines.filter { line ->
+            line.from.x == line.to.x
+                    || line.from.y == line.to.y
+                    || (line.from.x == line.from.y && line.to.x == line.to.y)
         }
         return markTable(table, filterLines)
     }

@@ -10,4 +10,8 @@ class Day05Test: ShouldSpec({
     should("give 5 for part 1") {
         day05.part1(input) shouldBe 5
     }
+
+    should("give 12 for part 2") {
+        day05.part2(input) shouldBe 12
+    }
 })
